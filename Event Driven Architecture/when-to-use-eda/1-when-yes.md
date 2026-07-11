@@ -92,31 +92,3 @@ Event-Driven Architecture is not a silver bullet and should not be adopted simpl
 For classic information systems, internal administrative portals, or systems with predominantly synchronous workflows (where the user requires immediate hard-consistency confirmation), traditional architectures based on synchronous APIs (REST/gRPC) and relational databases remain the most efficient and cost-effective choice.
 
 The design recommendation is to **reserve EDA for system boundaries** or specific subdomains where elastic scalability, asynchronous processing, and the decoupling of critical services (such as payment gateways or telemetry ingestion) fully justify the infrastructure investment and operational complexity.
-
-```mermaid
-graph TD
-    %% Producer
-    Producer[Producer Service]
-
-    %% Channel / Broker
-    subgraph Event_Broker [Event Channel / Message Broker]
-        Queue[Event Queue / Topic]
-    end
-
-    %% Consumers
-    subgraph Consumers_Group [Consumer Services]
-        ConsumerA[Consumer A: Payment Service]
-        ConsumerB[Consumer B: Notification Service]
-        ConsumerC[New Consumer C: Analytics Service]
-    end
-
-    %% Network hops highlighting
-    style Queue fill:#f9f,stroke:#333,stroke-width:2px
-    style ConsumerC stroke-dasharray: 5 5, fill:#dfd
-
-    %% Connections with network hop indicators
-    Producer -->|1. Publish Event <br/> over Network| Queue
-    Queue -->|2. Push / Pull Event| ConsumerA
-    Queue -->|2. Push / Pull Event| ConsumerB
-    Queue -.->|3. Scale out: Add without changes| ConsumerC
-```
